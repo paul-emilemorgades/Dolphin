@@ -7,26 +7,6 @@ Created on Sat Nov  7 18:11:00 2020
 import numpy as np
 import scipy.stats 
 
-
-def cov(a,b):
-    c = np.mean(a)
-    d = np.mean(b)
-    a = a - c
-    b = b - d
-    return np.mean(a * b)
-
-#print(cov([1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9]))
-
-def pearsonCorrelation(listOfFloat1, listOfFloat2):
-    float1 = np.var(listOfFloat1)
-    float2 = np.var(listOfFloat2)
-    float3 = np.cov(listOfFloat1, listOfFloat2)
-    return float3/ np.sqrt(float1 * float2)
-
-float1 = pearsonCorrelation([1,2,3,4,5,6,7,8,9],[1,2,3,4,5,6,7,8,9])
-#print(float1)
-#print(scipy.stats.pearsonr([1,2,3,4,5,6,7,8,9],[-1,-2,-3,-4,-5,-6,-7,-8,-9]))
-
 def computeAveragePearsonr(index, allAssets):
     moy = 0
     for i in range(len(allAssets)):
@@ -60,9 +40,3 @@ def bestPearsonr(allAssets):
 
 assert(str(bestPearsonr([tab, tab3, tab2, tab])) == """{1: 0.05743356147616795, 0: 0.6858111871587226}""")
     
-#print(bestPearsonr([tab, tab, tab2]))
-"""
-def naiveDecision(listOfListOfFloats):
-    for i in range(len(listOfListOfFloats)):
-        if(scipy.stats.pearsonr(i,0) >)
-"""
