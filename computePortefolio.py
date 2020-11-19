@@ -54,10 +54,19 @@ assert(getTheNBest([1,2,-44,1000],2) == [3, 1])
 
 def computeSharpFromPortfolio(portfolio, means, returns):
     portfolioMeans= [means[i] for i in portfolio]
-    porfolioReturns = [returns[i] for i in portfolio]
-    cov = np.corrcoef(listofAllReturns)
-    weights = [1./len(portfolio) for i in portfolio]
+    portfolioReturns = [returns[i] for i in portfolio]
+    cov = np.corrcoef(portfolioReturns)
+    weights =np.array( [1./len(portfolio) for i in portfolio])
     return computeSharp(portfolioMeans,cov,weights)
+
+portfolio = [2,5,6]
+returns = [[i%2,i%3,i%4] for i in range(10)] 
+means = range(10)
+mat = [[2%2,2%3,2%4],[5%2,5%3,5%4],[6%2,6%3,6%4]]
+weights = np.array( [1./len(portfolio) for i in range(3)])
+cov = np.corrcoef(mat)
+portfolioMeans = [2,5,6]
+assert(computeSharpFromPortfolio(portfolio,means,returns) == computeSharp(portfolioMeans,cov, weights))
 
 def linearSwap(portfolio, means, returns):
      for i in range(len(portfolio)):
@@ -69,4 +78,4 @@ def linearSwap(portfolio, means, returns):
              if(sharp > maxSharp):
                  m = j
              portfolio[i] = m
-    return portfolio
+     return portfolio
