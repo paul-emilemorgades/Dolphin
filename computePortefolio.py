@@ -29,6 +29,14 @@ def computeStandardDeviation(weights, cov):
 weights = np.array([1,1])
 cov = [[1,1],[1,1]]
 
-
 assert(computeStandardDeviation(weights,cov) == 2.)
 
+def computeReturns(weights, means):
+    return np.dot(weights.T,means)
+
+def computeSharp(means, cov, weights):
+    nom = computeReturns(weights,means) - 0.05
+    print(nom)
+    return nom/computeStandardDeviation(weights,cov)
+
+assert(computeSharp(weights,cov,np.array([0.5,0.5])) == 0.95)
