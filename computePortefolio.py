@@ -52,3 +52,21 @@ assert(getTheNBest([1,2,-44,1000],4) == [3, 1, 0, 2])
 
 assert(getTheNBest([1,2,-44,1000],2) == [3, 1])
 
+def computeSharpFromPortfolio(portfolio, means, returns):
+    portfolioMeans= [means[i] for i in portfolio]
+    porfolioReturns = [returns[i] for i in portfolio]
+    cov = np.corrcoef(listofAllReturns)
+    weights = [1./len(portfolio) for i in portfolio]
+    return computeSharp(portfolioMeans,cov,weights)
+
+def linearSwap(portfolio, means, returns):
+     for i in range(len(portfolio)):
+         portfolio[i] = 0
+         m, maxSharp  = 0, computeSharpFromPortfolio(portfolio,means,returns)
+         for j in range(len(returns)):
+             portfolio[i] = j
+             sharp = computeSharpFromPortfolio(portfolio,means,returns)
+             if(sharp > maxSharp):
+                 m = j
+             portfolio[i] = m
+    return portfolio
