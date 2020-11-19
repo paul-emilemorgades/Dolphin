@@ -6,3 +6,10 @@ jump_base_url = 'https://dolphin.jump-technology.com:8443/api/v1/'
 
 #print result from request getting all actifs unfiltered
 print_request(get_all_actifs(group_id, group_pwd, jump_base_url))
+
+#main
+listOfAllReturns = getReturns("""good addresse """) #CLaire
+means, cov = computeMeansAndCov(listOfAllReturns) # Pio
+portfolio = computePortfolio(means,cov) #Pio
+jsonPortfolio = portfolioToJson(portfolio)
+sendPortfolio(jsonPortfolio) # Tanguy
