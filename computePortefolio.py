@@ -46,11 +46,16 @@ def getTheNBest(means,n):
         tab[i] = (i, means[i])
     res = sorted(tab, key = lambda item: item[1], reverse=True)
     res = res[:n]
-    return [i[0] for i in res]
+    res = [i[0] for i in res]
+    otherAsset = [i for i in range(len(means))]
+    for i in res:
+        otherAsset.remove(i)
+    return  res, otherAsset
 
-assert(getTheNBest([1,2,-44,1000],4) == [3, 1, 0, 2])
-
-assert(getTheNBest([1,2,-44,1000],2) == [3, 1])
+assert(getTheNBest([1,2,-44,1000],4)[0] == [3, 1, 0, 2])
+assert(getTheNBest([1,2,-44,1000],4)[1] == [])
+assert(getTheNBest([1,2,-44,1000],2)[0] == [3, 1])
+assert(getTheNBest([1,2,-44,1000],2)[1] == [0,2])
 
 def computeSharpFromPortfolio(portfolio, means, returns):
     portfolioMeans= [means[i] for i in portfolio]
@@ -68,14 +73,49 @@ cov = np.corrcoef(mat)
 portfolioMeans = [2,5,6]
 assert(computeSharpFromPortfolio(portfolio,means,returns) == computeSharp(portfolioMeans,cov, weights))
 
-def linearSwap(portfolio, means, returns):
+def linearSwap(portfolio, otherAsset,means, returns):
      for i in range(len(portfolio)):
-         portfolio[i] = 0
-         m, maxSharp  = 0, computeSharpFromPortfolio(portfolio,means,returns)
-         for j in range(len(returns)):
+         m, maxSharp  = portfolio[i], computeSharpFromPortfolio(portfolio,means,returns)
+         old = portfolio[i]
+         for j in otherAsset:
              portfolio[i] = j
              sharp = computeSharpFromPortfolio(portfolio,means,returns)
              if(sharp > maxSharp):
                  m = j
-             portfolio[i] = m
+         portfolio[i] = m
+         try:
+             otherAsset.remove(m)
+             otherAsset.append(old)
+         except:
+             pass       
      return portfolio
+
+portfolio = [1,2]
+otherAsset = [0,3,4]
+returns= [[1,2,3],[1,2,3],[1,2,3],[1000,2000,3000],[500,800,900]]
+means = [np.mean(i) for i in returns]
+assert(linearSwap(portfolio,otherAsset,means, returns) == [4, 3])
+
+portfolio = [1,2]
+otherAsset = [0,3,4]
+returns= [[1,2,3],[1,2,3],[1,2,3],[1,4,16],[1,2,3]]
+means = [np.mean(i) for i in returns]
+assert(linearSwap(portfolio,otherAsset,means, returns)[0] == 3)
+
+portfolio = [0,1]
+otherAsset = [2]
+returns= [[1,2,3],[234,7,16],[-100,22,3]]
+means = [np.mean(i) for i in returns]
+sharp = [computeSharpFromPortfolio(i,means, returns) for i in [[1,2],[0,1],[0,2]]]
+#print(sharp)
+assert(linearSwap(portfolio,otherAsset,means, returns) == [2,1])
+
+def _computePortfolio(listOfAllReturns,n):
+    means = [np.mean(i) for i in listOfAllReturns]
+    portfolio, otherAsset = getTheNBest(means,n)
+    return linearSwap(portfolio, otherAsset, means, listOfAllReturns)
+
+assert(_computePortfolio(returns,3) ==[1, 0, 2])
+assert(_computePortfolio(returns,2) == [1,2])
+def computePortfolio(listOfAllReturns):
+    return _computePortfolio(listOfAllReturns,40)
