@@ -36,7 +36,19 @@ def computeReturns(weights, means):
 
 def computeSharp(means, cov, weights):
     nom = computeReturns(weights,means) - 0.05
-    print(nom)
     return nom/computeStandardDeviation(weights,cov)
 
 assert(computeSharp(weights,cov,np.array([0.5,0.5])) == 0.95)
+
+def getTheNBest(means,n):
+    tab = [0 for i in range(len(means))]
+    for i in range(len(means)):
+        tab[i] = (i, means[i])
+    res = sorted(tab, key = lambda item: item[1], reverse=True)
+    res = res[:n]
+    return [i[0] for i in res]
+
+assert(getTheNBest([1,2,-44,1000],4) == [3, 1, 0, 2])
+
+assert(getTheNBest([1,2,-44,1000],2) == [3, 1])
+
