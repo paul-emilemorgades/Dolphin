@@ -8,7 +8,9 @@ jump_base_url = 'https://dolphin.jump-technology.com:8443/api/v1/'
 print_request(get_all_actifs(group_id, group_pwd, jump_base_url))
 
 #main
-listOfAllReturns = getReturns("""good addresse """) #CLaire
+
+asset_ids = get_asset_ids(group_id, group_pwd, jump_base_url)#Claire
+listOfAllReturns =  create_return_matrix(group_id, group_pwd, jump_base_url, asset_ids)#Claire
 portfolio = computePortfolio(listOfAllReturns) #Pio
 jsonPortfolio = portfolioToJson(portfolio)
 sendPortfolio(jsonPortfolio) # Tanguy
