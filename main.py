@@ -8,8 +8,15 @@ jump_base_url = 'https://dolphin.jump-technology.com:8443/api/v1/'
 
 #main
 
-asset_ids = get_asset_ids(group_id, group_pwd, jump_base_url)#Claire
-listOfAllReturns =  create_return_matrix(group_id, group_pwd, jump_base_url, asset_ids)#Claire
-portfolio = computePortfolio(listOfAllReturns) #Pio
-jsonPortfolio = portfolioToJson(portfolio)
-print_request(sendPortfolio(jsonPortfolio, group_id, group_pwd)) # Tanguy
+#get list of ids of assets which are of type STOCK
+asset_ids = get_asset_ids(group_id, group_pwd, jump_base_url)
+
+#get portfolio id, the id to which we will post our portfolio
+portfolio_id = get_portfolio_id(group_id, group_pwd, jump_base_url)
+
+#get list of lists of returns at each date for each asset
+listOfAllReturns =  create_return_matrix(group_id, group_pwd, jump_base_url, asset_ids)
+
+#portfolio = computePortfolio(listOfAllReturns) #Pio
+#jsonPortfolio = portfolioToJson(portfolio)
+#print_request(sendPortfolio(jsonPortfolio, group_id, group_pwd)) # Tanguy

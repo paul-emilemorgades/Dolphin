@@ -1,10 +1,27 @@
 import requests
 import json
 
+def get_portfolio_id(usr : str, pwd : str, base_url : str):
+  all_assets_req = get_all_assets(usr, pwd, base_url)
+  assets_dict = json.loads(all_assets_req.text)
+  portfolio_id = ''
+
+  #search for asset of type portfolio
+  for asset in assets_dict:
+    asset_type = asset['TYPE']
+    asset_label = asset['LABEL']
+    if asset_type['value'] != 'PORTFOLIO' or asset_label['value'] == 'REF':
+      continue
+    asset_id_json = asset['ASSET_DATABASE_ID']
+    portfolio_id += asset_id_json['value']
+    break
+  return portfolio_id
+
+
 #get unfiltered assets
 def get_all_assets(usr : str, pwd : str, base_url : str):
   actifs_url = base_url
-  actifs_url += 'asset?columns=ASSET_DATABASE_ID&columns=TYPE'
+  actifs_url += 'asset?columns=ASSET_DATABASE_ID&columns=TYPE&columns=LABEL'
   r = requests.get(actifs_url, auth=(usr, pwd))
   return r
 
