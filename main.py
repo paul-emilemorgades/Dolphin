@@ -6,9 +6,6 @@ group_id = "EPITA_GROUPE2"
 group_pwd = "PcA7s3Rnzsch6M79"
 jump_base_url = 'https://dolphin.jump-technology.com:8443/api/v1/'
 
-#print result from request getting all actifs unfiltered
-get_all_assets(group_id, group_pwd, jump_base_url)
-
 #main
 
 asset_ids = get_asset_ids(group_id, group_pwd, jump_base_url)#Claire
