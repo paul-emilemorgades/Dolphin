@@ -82,11 +82,26 @@ def create_return_matrix(usr: str, pwd: str, base_url: str, list_asset_id: list)
       quote_return = quote['return']
       asset_returns.append(quote_return['value'])
     list_returns.append(asset_returns)
-  return list_returns
+  return convertToFloat(list_returns)
+
+#change a comma in point in a string
+def changeCommaInPoint(string):
+    res = ""
+    for i in string:
+        s = ''
+        if i != ',':
+            s = i
+        else:
+            s = '.'
+        res += s
+    return res
+
+
+assert(changeCommaInPoint("0,6677")== "0.6677" )
 
 #convert an array of array of string to float
-
 def convertToFloat(arrayOfArrayOfString):
-    return [[float(j) for j in i] for i in arrayOfArrayOfString]
+    return [[float(changeCommaInPoint(j)) for j in i]
+             for i in arrayOfArrayOfString]
 
-assert(convertToFloat([['0.5','0.6'],['0.66777'],['-0.23']])== [[0.5,0.6],[0.66777],[-0.23]])
+assert(convertToFloat([['0,5','0,6'],['0,66777'],['-0,23']])== [[0.5,0.6],[0.66777],[-0.23]])
