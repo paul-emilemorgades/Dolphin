@@ -4,7 +4,7 @@ import json
 #get unfiltered assets
 def get_all_assets(usr : str, pwd : str, base_url : str):
   actifs_url = base_url
-  actifs_url += 'asset'
+  actifs_url += 'asset?columns=ASSET_DATABASE_ID&columns=TYPE'
   r = requests.get(actifs_url, auth=(usr, pwd))
   return r
 
@@ -44,6 +44,9 @@ def get_asset_ids(usr: str, pwd: str, base_url: str):
 
   #get all asset ids into a list
   for asset in assets_dict:
+    asset_type = asset['TYPE']
+    if asset_type['value'] != 'STOCK':
+      continue
     asset_id_json = asset['ASSET_DATABASE_ID']
     list_asset_id.append(asset_id_json['value'])
 
