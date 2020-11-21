@@ -84,3 +84,9 @@ def create_return_matrix(usr: str, pwd: str, base_url: str, list_asset_id: list)
     list_returns.append(asset_returns)
   return list_returns
 
+#convert an array of array of string to float
+
+def convertToFloat(arrayOfArrayOfString):
+    return [[float(j) for j in i] for i in arrayOfArrayOfString]
+
+assert(convertToFloat([['0.5','0.6'],['0.66777'],['-0.23']])== [[0.5,0.6],[0.66777],[-0.23]])
