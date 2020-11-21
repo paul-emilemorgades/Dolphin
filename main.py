@@ -17,6 +17,9 @@ portfolio_id = get_portfolio_id(group_id, group_pwd, jump_base_url)
 #get list of lists of returns at each date for each asset
 listOfAllReturns =  create_return_matrix(group_id, group_pwd, jump_base_url, asset_ids)
 
-#portfolio = computePortfolio(listOfAllReturns) #Pio
-#jsonPortfolio = portfolioToJson(portfolio)
-#print_request(sendPortfolio(jsonPortfolio, group_id, group_pwd)) # Tanguy
+portfolio = computePortfolio(listOfAllReturns) #Pio
+
+#get portfolio as dict for PUT request
+my_dict = createPortfolio(portfolio, asset_ids)
+
+print_request(sendPortfolio(my_dict, group_id, group_pwd)) # Tanguy
