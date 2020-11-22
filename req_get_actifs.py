@@ -84,7 +84,7 @@ def create_return_matrix(usr: str, pwd: str, base_url: str, list_asset_id: list)
     list_returns.append(asset_returns)
   return convertToFloat(list_returns)
 
-#change a comma in point in a string
+#change a comma in point in a string, it is necessary for conversion
 def changeCommaInPoint(string):
     res = ""
     for i in string:
