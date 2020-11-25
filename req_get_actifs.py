@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
 
 def get_portfolio_id(usr : str, pwd : str, base_url : str):
   all_assets_req = get_all_assets(usr, pwd, base_url)
@@ -21,7 +22,7 @@ def get_portfolio_id(usr : str, pwd : str, base_url : str):
 #get unfiltered assets
 def get_all_assets(usr : str, pwd : str, base_url : str):
   actifs_url = base_url
-  actifs_url += 'asset?columns=ASSET_DATABASE_ID&columns=TYPE&columns=LABEL'
+  actifs_url += 'asset?columns=ASSET_DATABASE_ID&columns=FIRST_QUOTE_DATE&columns=TYPE&columns=LABEL'
   r = requests.get(actifs_url, auth=(usr, pwd))
   return r
 
@@ -58,11 +59,14 @@ def get_asset_ids(usr: str, pwd: str, base_url: str):
   all_assets_req = get_all_assets(usr, pwd, base_url)
   assets_dict = json.loads(all_assets_req.text)
   list_asset_id = []
+  portfolio_date = datetime.strptime('2016-06-01', '%Y-%m-%d')
 
   #get all asset ids into a list
   for asset in assets_dict:
     asset_type = asset['TYPE']
-    if asset_type['value'] != 'STOCK':
+    asset_creation = asset['FIRST_QUOTE_DATE']
+    creation_date = datetime.strptime(asset_creation['value'], '%Y-%m-%d')
+    if asset_type['value'] != 'STOCK' or creation_date > portfolio_date:
       continue
     asset_id_json = asset['ASSET_DATABASE_ID']
     list_asset_id.append(asset_id_json['value'])
