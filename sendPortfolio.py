@@ -28,19 +28,31 @@ def getPriceinDollar(asset_id):
     r = requests.get(quote_url, auth=(usr, pwd))
     asset = json.loads(r.text)
     device = asset["CURRENCY"]["value"]
+    print(price," ",device)
     if(device == "EUR"):
-        return price * 1.11
+        price =  price * 1.11
+    if(device == "JPY"):
+        price =  price * 0.00925  
+    l = lambda a :  int(100*(100/a))
+    if(price != 0):
+        price =  l(price)
+    print(price)
     return price
 
-assert(getPriceinDollar("2110")==101.51)   
-#def normalize()
+#assert(getPriceinDollar("2110")==101.51) 
+
+def normalize(portfolio: list, assets: list):
+        return [getPriceinDollar(assets[i]) for i in portfolio]
 
 def createPortfolio(portfolio: list, assets: list):
   assets_list = []
-  for ind in portfolio:
+  normalized_list = normalize(portfolio,assets)
+  print(normalized_list)
+  for i in range(len(portfolio)):
+    ind = portfolio[i]
     asset_id = assets[ind]
     asset_dict = { "asset": int(asset_id),
-                   "quantity": 1 #this should probably be modified
+                   "quantity": normalized_list[i] #this should probably be modified
                  }
     portfolio_asset = { "asset": asset_dict }
     assets_list.append(portfolio_asset)
@@ -53,7 +65,6 @@ def createPortfolio(portfolio: list, assets: list):
                      "type": "front", #written in the subject
                      "values" : dict_values
                    }
-
   return dict_portfolio
 
 
