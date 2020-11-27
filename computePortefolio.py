@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import quandl
 import scipy.optimize as sco
-
+import json
+from sendPortfolio import createPortfolio, sendPortfolio, postsharpe
+from req_get_actifs import changeCommaInPoint
 
 def computeMean(tab):
     return [np.mean(i) for i in tab]
@@ -66,42 +68,27 @@ def normalize(listOfListOfFloat):
 
 assert(normalize([[0.8,0.8],[0.9],[0.1,0.5,0.6]])== [[0.8], [0.9], [0.1]])
 
-def computeSharpFromPortfolio(portfolio, means, returns):
-    portfolioMeans= [means[i] for i in portfolio]
-    portfolioReturns = [returns[i] for i in portfolio]
-    portfolioReturns = normalize(portfolioReturns)
-    cov = np.corrcoef(np.array(portfolioReturns))
-    weights =np.array( [1./len(portfolio) for i in portfolio])
-    return computeSharp(portfolioMeans,cov,weights)
+def computeSharpFromPortfolio(portfolio, assets_id):
+    json_porfolio = createPortfolio(portfolio,assets_id)
+    usr = "EPITA_GROUPE2"
+    pwd = "PcA7s3Rnzsch6M79"
+    sendPortfolio(json_porfolio, usr, pwd)
+    s = json.loads(postsharpe(usr,pwd).text)
+    print(portfolio, "\n")
+    a = float(changeCommaInPoint(s["1821"]["12"]["value"]))
+    print(a, "\n" )
+    return a
+    
+     
 
 
-
-portfolio = [2,5,6]
-returns = [[i%2,i%3,i%4] for i in range(10)] 
-means = range(10)
-mat = [[2%2,2%3,2%4],[5%2,5%3,5%4],[6%2,6%3,6%4]]
-weights = np.array( [1./len(portfolio) for i in range(3)])
-cov = np.corrcoef(mat)
-portfolioMeans = [2,5,6]
-assert(computeSharpFromPortfolio(portfolio,means,returns) == computeSharp(portfolioMeans,cov, weights))
-
-portfolio = [2,5,6]
-returns = [[float(i%2),float(i%3),float(i%4)] for i in range(10)] 
-means = range(10)
-mat = [[2%2,2%3,2%4],[5%2,5%3,5%4],[6%2,6%3,6%4]]
-weights = np.array( [1./len(portfolio) for i in range(3)])
-cov = np.corrcoef(mat)
-portfolioMeans = [2,5,6]
-assert(computeSharpFromPortfolio(portfolio,means,returns) == computeSharp(portfolioMeans,cov, weights))
-
-
-def linearSwap(portfolio, otherAsset,means, returns):
+def linearSwap(portfolio, otherAsset,means, returns, assets_id):
      for i in range(len(portfolio)):
-         m, maxSharp  = portfolio[i], computeSharpFromPortfolio(portfolio,means,returns)
+         m, maxSharp  = portfolio[i], computeSharpFromPortfolio(portfolio, assets_id)
          old = portfolio[i]
          for j in otherAsset:
              portfolio[i] = j
-             sharp = computeSharpFromPortfolio(portfolio,means,returns)
+             sharp = computeSharpFromPortfolio(portfolio, assets_id)
              if(sharp > maxSharp):
                  m = j
          portfolio[i] = m
@@ -109,35 +96,15 @@ def linearSwap(portfolio, otherAsset,means, returns):
              otherAsset.remove(m)
              otherAsset.append(old)
          except:
-             pass       
+             pass
+     print(computeSharpFromPortfolio(portfolio,assets_id))
      return portfolio
 
-portfolio = [1,2]
-otherAsset = [0,3,4]
-returns= [[1,2,3],[1,2,3],[1,2,3],[1000,2000,3000],[500,800,900]]
-means = [np.mean(i) for i in returns]
-assert(linearSwap(portfolio,otherAsset,means, returns) == [4, 3])
 
-portfolio = [1,2]
-otherAsset = [0,3,4]
-returns= [[1,2,3],[1,2,3],[1,2,3],[1,4,16],[1,2,3]]
-means = [np.mean(i) for i in returns]
-assert(linearSwap(portfolio,otherAsset,means, returns)[0] == 3)
-
-portfolio = [0,1]
-otherAsset = [2]
-returns= [[1,2,3],[234,7,16],[-100,22,3]]
-means = [np.mean(i) for i in returns]
-sharp = [computeSharpFromPortfolio(i,means, returns) for i in [[1,2],[0,1],[0,2]]]
-#print(sharp)
-assert(linearSwap(portfolio,otherAsset,means, returns) == [2,1])
-
-def _computePortfolio(listOfAllReturns,n):
+def _computePortfolio(listOfAllReturns,n, assets_id):
     means = [np.mean(i) for i in listOfAllReturns]
     portfolio, otherAsset = getTheNBest(means,n)
-    return linearSwap(portfolio, otherAsset, means, listOfAllReturns)
+    return linearSwap(portfolio, otherAsset, means, listOfAllReturns, assets_id)
 
-assert(_computePortfolio(returns,3) ==[1, 0, 2])
-assert(_computePortfolio(returns,2) == [1,2])
-def computePortfolio(listOfAllReturns):
-    return _computePortfolio(listOfAllReturns,40)
+def computePortfolio(listOfAllReturns, assets_id):
+    return _computePortfolio(listOfAllReturns,40 , assets_id)

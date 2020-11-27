@@ -1,6 +1,7 @@
 import requests
 import json
 from req_get_actifs import changeCommaInPoint, get_quote_for_asset
+from computePortefolio import * 
 url_post_portfolio = "https://dolphin.jump-technology.com:8443/api/v1/portfolio/1821/dyn_amount_compo"
 
 #this does not seem to work for now : 404 error
@@ -28,7 +29,6 @@ def getPriceinDollar(asset_id):
     r = requests.get(quote_url, auth=(usr, pwd))
     asset = json.loads(r.text)
     device = asset["CURRENCY"]["value"]
-    print(price," ",device)
     if(device == "EUR"):
         price =  price * 1.11
     if(device == "JPY"):
@@ -36,7 +36,6 @@ def getPriceinDollar(asset_id):
     l = lambda a :  int(100*(100/a))
     if(price != 0):
         price =  l(price)
-    print(price)
     return price
 
 #assert(getPriceinDollar("2110")==101.51) 
@@ -47,7 +46,6 @@ def normalize(portfolio: list, assets: list):
 def createPortfolio(portfolio: list, assets: list):
   assets_list = []
   normalized_list = normalize(portfolio,assets)
-  print(normalized_list)
   for i in range(len(portfolio)):
     ind = portfolio[i]
     asset_id = assets[ind]

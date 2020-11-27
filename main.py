@@ -20,11 +20,12 @@ listOfAllReturns =  create_return_matrix(group_id, group_pwd, jump_base_url, ass
 
 #listOfAllReturns = a
 #compute the 'best' portefolio
-portfolio = computePortfolio(listOfAllReturns) 
+portfolio = computePortfolio(listOfAllReturns, asset_ids) 
 
 #get portfolio as dict for PUT request
 my_dict = createPortfolio(portfolio, asset_ids)
 print(my_dict)
 
 print_request(sendPortfolio(my_dict, group_id, group_pwd)) # Tanguy
+
 print_request(postsharpe(group_id, group_pwd))
