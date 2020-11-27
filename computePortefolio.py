@@ -82,8 +82,9 @@ def computeSharpFromPortfolio(portfolio, assets_id):
      
 
 
-def linearSwap(portfolio, otherAsset,means, returns, assets_id):
-     for i in range(len(portfolio)):
+def linearSwap(portfolio, otherAsset,assets_id):
+     otherAsset = range(15)  
+     for i in range(16):
          m, maxSharp  = portfolio[i], computeSharpFromPortfolio(portfolio, assets_id)
          old = portfolio[i]
          for j in otherAsset:
@@ -104,7 +105,8 @@ def linearSwap(portfolio, otherAsset,means, returns, assets_id):
 def _computePortfolio(listOfAllReturns,n, assets_id):
     means = [np.mean(i) for i in listOfAllReturns]
     portfolio, otherAsset = getTheNBest(means,n)
-    return linearSwap(portfolio, otherAsset, means, listOfAllReturns, assets_id)
+    print("euris , ", computeSharpFromPortfolio(portfolio, assets_id), "\n")
+    return linearSwap(portfolio, otherAsset, assets_id)
 
 def computePortfolio(listOfAllReturns, assets_id):
-    return _computePortfolio(listOfAllReturns,40 , assets_id)
+    return _computePortfolio(listOfAllReturns,16 , assets_id)

@@ -10,7 +10,6 @@ jump_base_url = 'https://dolphin.jump-technology.com:8443/api/v1/'
 
 #get list of ids of assets which are of type STOCK
 asset_ids = get_asset_ids(group_id, group_pwd, jump_base_url)
-
 #get portfolio id, the id to which we will post our portfolio
 portfolio_id = get_portfolio_id(group_id, group_pwd, jump_base_url)
 
