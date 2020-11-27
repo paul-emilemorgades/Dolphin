@@ -71,3 +71,6 @@ def createPortfolio(portfolio: list, assets: list):
 def sendPortfolio(jsonPortfolio: dict, usr:str, pwd:str):
   req = requests.put(url_post_portfolio, data=json.dumps(jsonPortfolio), auth=(usr, pwd))
   return req
+
+def postsharpe(usr:str, pwd:str):
+    return requests.post('https://dolphin.jump-technology.com:8443/api/v1/ratio/invoke',data=json.dumps({'ratio':[12],'asset':[1821],'bench':'null','startDate':'2016-06-01','endDate':'2020-09-30','frequency':'null'}),auth=(usr,pwd))

@@ -24,5 +24,7 @@ portfolio = computePortfolio(listOfAllReturns)
 
 #get portfolio as dict for PUT request
 my_dict = createPortfolio(portfolio, asset_ids)
+print(my_dict)
 
 print_request(sendPortfolio(my_dict, group_id, group_pwd)) # Tanguy
+print_request(postsharpe(group_id, group_pwd))
